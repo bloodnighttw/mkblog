@@ -12,6 +12,7 @@
 		"remark-parse": "^11.0.0",
 		"remark-rehype": "^11.1.1",
 		"unist-util-select": "^5.1.0",
+        "unified": "^11.0.5",
 		"yaml": "^2.7.0",
 		"zod": "^3.24.2"
 	},
@@ -19,7 +20,6 @@
 		"@biomejs/biome": "1.9.4",
 		"@types/node": "^22.13.8",
 		"typescript": "^5.5.3",
-		"unified": "^11.0.5",
 		"vite-tsconfig-paths": "^5.1.4",
 		"vitest": "^3.0.7"
 	},
