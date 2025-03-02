@@ -27,7 +27,6 @@ interface YAMLNode {
 	value: string;
 }
 
-// TODO: Metadata checker
 class Content<T> {
 	readonly filepath: string;
 	readonly slug: string;
