@@ -10,11 +10,12 @@ import frontmatter from "remark-frontmatter";
 import { select } from "unist-util-select";
 import yaml from "yaml";
 import { z, type ZodRawShape } from "zod";
+import fastGlob, {type Pattern} from "fast-glob";
+
 
 interface ContentOptions<T extends ZodRawShape> {
-	root: string;
-	matchRegex?: RegExp | "markdown";
-	createSlug?: (from: string) => string;
+    include: Pattern | Pattern[];
+	createSlug: "mix" | "removeExtension" | "hash" | ((from: string) => string);
 	schema: T;
 
 	mkBlogPlugins?: () => void;
@@ -110,21 +111,19 @@ const markdownRegex = /\.md$/;
 async function defineContent<T extends ZodRawShape>(
 	options: ContentOptions<T>,
 ): Promise<Collection<T>> {
-	const base = path.join(process.cwd(), options.root);
-	const changeRegex =
-		options.matchRegex === "markdown" || !options.matchRegex
-			? markdownRegex
-			: options.matchRegex;
-	const files = (await fs.promises.readdir(base)).filter((file) =>
-		changeRegex.test(file),
-	);
+
+    const files = await fastGlob(options.include);
+    const slugFunc =
+        options.createSlug === "mix" ? ()=>"mix" :
+        options.createSlug === "removeExtension" ? (from: string) => from.replace(markdownRegex, "") :
+        options.createSlug === "hash" ? (from: string) => from :
+        options.createSlug;
+
 
 	const posts = files.map((file) => {
-		const filepath = path.join(base, file);
-		const slug =
-			options.createSlug?.(file) ?? file.replace(changeRegex, "");
+		const slug = slugFunc(file);
 		return new Content<T>(
-			filepath,
+			path.join(process.cwd(), file),
 			slug,
 			options.remarkPlugins ?? [],
 			options.rehypePlugins ?? [],
