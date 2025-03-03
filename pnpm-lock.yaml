@@ -61,6 +61,8 @@ importers:
         specifier: ^3.0.7
         version: 3.0.7(@types/debug@4.1.12)(@types/node@22.13.8)(yaml@2.7.0)
 
+  packages/core: {}
+
 packages:
 
   '@biomejs/biome@1.9.4':
